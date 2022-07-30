@@ -46,7 +46,6 @@ if check_password():
     st.title('Streamlit Scatter')
     #st.subheader('Interactive scatter plot:')
     
-    @st.cache
     def load_data(user, pao, csv_url):
                 
         github_session = requests.Session()
