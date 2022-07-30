@@ -54,6 +54,8 @@ if check_password():
 
         download = github_session.get(csv_url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')), sep=',', quotechar='"',quoting=2)
+        data['Statement Hover'] = data['Statement'].apply(lambda x: '<br>' + '<br>'.join(textwrap.wrap(x, 30)))
+        data['Step Hover'] = data['Step'].apply(lambda x: '<br>'.join(textwrap.wrap(x, 30)))
         return data
     
     
@@ -61,9 +63,7 @@ if check_password():
     pao = st.secrets["git_pao"]
     csv_url = st.secrets["git_csv_path"]
     data = load_data(user, pao, csv_url)
-    data['Statement Hover'] = data['Statement'].apply(lambda x: '<br>' + '<br>'.join(textwrap.wrap(x, 30)))
-    data['Step Hover'] = data['Step'].apply(lambda x: '<br>'.join(textwrap.wrap(x, 30)))
-
+    
     with st.container():
         fig = px.scatter(data, x="Importance_Score", y="Satisfaction_Score", color="Step",
                 size='Opportunity_Score', hover_name='Step Hover', 
