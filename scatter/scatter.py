@@ -20,7 +20,7 @@ def check_password():
     if "password_correct" not in st.session_state:
         # First run, show input for password.
         with st.container():
-            lb, col, rb = st.columns([1,1,1])
+            lb, col, rb = st.columns([1,3,1])
             col.subheader('Login')
             col.caption('This dashboard is private. If you know the password to open it, type it below:')
             col.text_input(
@@ -30,7 +30,7 @@ def check_password():
     elif not st.session_state["password_correct"]:
         # Password not correct, show input + error.
         with st.container():
-            lb, col, rb = st.columns([1,1,1])
+            lb, col, rb = st.columns([1,3,1])
             col.subheader('Login')
             col.caption('This dashboard is private. If you know the password to open it, type it below:')
             col.text_input(
@@ -46,6 +46,7 @@ if check_password():
     st.title('Streamlit Scatter')
     #st.subheader('Interactive scatter plot:')
     
+    @st.cache
     def load_data(user, pao, csv_url):
                 
         github_session = requests.Session()
@@ -53,15 +54,15 @@ if check_password():
 
         download = github_session.get(csv_url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')), sep=',', quotechar='"',quoting=2)
-        data['Statement Hover'] = data['Statement'].apply(lambda x: '<br>' + '<br>'.join(textwrap.wrap(x, 30)))
-        data['Step Hover'] = data['Step'].apply(lambda x: '<br>'.join(textwrap.wrap(x, 30)))
-        return data.copy()
+        return data
     
     
     user = st.secrets["git_username"]
     pao = st.secrets["git_pao"]
     csv_url = st.secrets["git_csv_path"]
     data = load_data(user, pao, csv_url)
+    data['Statement Hover'] = data['Statement'].apply(lambda x: '<br>' + '<br>'.join(textwrap.wrap(x, 30)))
+    data['Step Hover'] = data['Step'].apply(lambda x: '<br>'.join(textwrap.wrap(x, 30)))
 
     with st.container():
         fig = px.scatter(data, x="Importance_Score", y="Satisfaction_Score", color="Step",
