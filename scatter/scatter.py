@@ -63,35 +63,33 @@ if check_password():
     pao = st.secrets["git_pao"]
     csv_url = st.secrets["git_csv_path"]
     
-    with st.spinner(text="In progress..."):
-        data = load_data(user, pao, csv_url)
-        
-        with st.container():
-            fig = px.scatter(data, x="Importance_Score", y="Satisfaction_Score", color="Step",
-                    size='Opportunity_Score', hover_name='Step Hover', 
-                    hover_data={
-                        'Step': False,
-                        'Importance_Score': ':.2f',
-                        'Satisfaction_Score': ':.2f',
-                        'Opportunity_Score': ':.2f',
-                        'Statement Hover': True
-                    },
-                    labels={'Importance_Score': 'Importance Score', 
-                    'Satisfaction_Score': 'Satisfaction Score', 
-                    'Opportunity_Score': 'Opportunity Score',
-                    'Statement Hover': 'Statement'}, height=900)
 
-            fig.update_xaxes(range=[0,10], showspikes=True)
-            fig.update_yaxes(range=[0,10], showspikes=True)
-            #fig.update_layout(hoverlabel=dict(bgcolor='rgba(255,255,255,0.75)'))
-            fig.update_layout(legend=dict(x=0.5, y=-0.1, xanchor='center',yanchor='top', orientation="v"), hoverlabel={'align': 'left'})
-            fig.update_layout(font_size=16)
-            st.plotly_chart(fig, use_container_width=True)
-            st.caption("The Legend is interactive. All items are activated by default. Clicking on an item will toggle its visibility on the chart. You can double click on an item in the legend to focus on it. After double clicking on one item, you can add more items to the analysis by clicking on the others.")
+    data = load_data(user, pao, csv_url)
         
-        with st.expander('Show Raw data'):
-            df = data[['Step', 'Statement', 'Importance_Score', 'Satisfaction_Score', 'Opportunity_Score']]
-            df.columns = df.columns.str.replace('_', ' ')
-            #df = df.set_index(['Step', 'Statement'])
-            df = df.style.format({'Importance Score': '{:20,.2f}', 'Satisfaction Score': '{:20,.2f}', 'Opportunity Score': '{:20,.2f}'})
-            st.table(df)
+    fig = px.scatter(data, x="Importance_Score", y="Satisfaction_Score", color="Step",
+            size='Opportunity_Score', hover_name='Step Hover', 
+            hover_data={
+                'Step': False,
+                'Importance_Score': ':.2f',
+                'Satisfaction_Score': ':.2f',
+                'Opportunity_Score': ':.2f',
+                'Statement Hover': True
+            },
+            labels={'Importance_Score': 'Importance Score', 
+            'Satisfaction_Score': 'Satisfaction Score', 
+            'Opportunity_Score': 'Opportunity Score',
+            'Statement Hover': 'Statement'}, height=900)
+
+    fig.update_xaxes(range=[0,10], showspikes=True)
+    fig.update_yaxes(range=[0,10], showspikes=True)
+    fig.update_layout(legend=dict(x=0.5, y=-0.1, xanchor='center',yanchor='top', orientation="v"), hoverlabel={'align': 'left'})
+    fig.update_layout(font_size=16)
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption("The Legend is interactive. All items are activated by default. Clicking on an item will toggle its visibility on the chart. You can double click on an item in the legend to focus on it. After double clicking on one item, you can add more items to the analysis by clicking on the others.")
+    
+    with st.expander('Show Raw data'):
+        df = data[['Step', 'Statement', 'Importance_Score', 'Satisfaction_Score', 'Opportunity_Score']]
+        df.columns = df.columns.str.replace('_', ' ')
+        #df = df.set_index(['Step', 'Statement'])
+        df = df.style.format({'Importance Score': '{:20,.2f}', 'Satisfaction Score': '{:20,.2f}', 'Opportunity Score': '{:20,.2f}'})
+        st.table(df)
