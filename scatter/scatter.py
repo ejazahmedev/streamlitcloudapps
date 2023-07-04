@@ -5,7 +5,11 @@ import textwrap
 import json, requests, urllib, io
 import plotly.express as px
 
-#st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title='RiteHealth',
+    page_icon=':rocket:'#,
+#    layout='wide'
+)
 
 def check_password():
     """Returns `True` if the user had the correct password."""
