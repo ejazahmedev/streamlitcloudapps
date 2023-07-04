@@ -6,7 +6,7 @@ import json, requests, urllib, io
 import plotly.express as px
 
 st.set_page_config(
-    page_title='RiteHealth',
+    page_title='Scatter Plot Demo',
     page_icon=':rocket:'#,
 #    layout='wide'
 )
