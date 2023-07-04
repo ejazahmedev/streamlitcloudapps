@@ -7,7 +7,7 @@ import plotly.express as px
 
 st.set_page_config(
     page_title='Scatter Plot Demo',
-    page_icon='🚀'#,
+    page_icon=':heart:'#,
 #    layout='wide'
 )
 
